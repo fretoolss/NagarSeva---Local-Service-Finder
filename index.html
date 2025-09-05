@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic SEO -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NagarSeva — AI-Powered Local Service Finder (Plumber, Electrician, Tutor, Painter)</title>
+  <meta name="description" content="NagarSeva helps you instantly find trusted local services near you—plumbers, electricians, tutors, painters, and more. Compare ratings, prices, hours, and contact providers directly." />
+  <meta name="keywords" content="local services, plumber, electrician, tutor, painter, near me, Mumbai, India, service finder" />
+  <link rel="canonical" href="https://yourusername.github.io/nagarseva/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="NagarSeva — AI-Powered Local Service Finder" />
+  <meta property="og:description" content="Find trusted local services near you. Compare ratings, prices, hours. Call or WhatsApp in one tap." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourusername.github.io/nagarseva/" />
+  <meta property="og:image" content="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='100%' height='100%' fill='%231e293b'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='64' fill='white'>NagarSeva</text></svg>"/>
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230ea5e9'/><path d='M12 44h40v8H12zM16 12h8v24h-8zM40 12h8v24h-8zM28 20h8v16h-8z' fill='white'/></svg>" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Leaflet CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+
+  <!-- lunr.js -->
+  <script src="https://unpkg.com/lunr/lunr.js"></script>
+
+  <!-- Robots fallback note: actual robots.txt/sitemap.xml are offered as downloads from the footer links -->
+
+  <style>
+    /* Minor UI touches */
+    .sticky-header { backdrop-filter: saturate(180%) blur(8px); background: rgba(15,23,42,0.7); }
+    .active-link { color: #0ea5e9; }
+    .truncate-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  </style>
+
+  <!-- JSON-LD: Website, BreadcrumbList, FAQPage, example LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"NagarSeva",
+    "url":"https://yourusername.github.io/nagarseva/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://yourusername.github.io/nagarseva/#services?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://yourusername.github.io/nagarseva/"},
+      {"@type":"ListItem","position":2,"name":"Services","item":"https://yourusername.github.io/nagarseva/#services"},
+      {"@type":"ListItem","position":3,"name":"Add Listing","item":"https://yourusername.github.io/nagarseva/#add-listing"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json" id="faq-jsonld">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[]
+  }
+  </script>
+  <script type="application/ld+json" id="localbusiness-jsonld">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"Sample Provider",
+    "image":"https://via.placeholder.com/800x450.png?text=Provider",
+    "address":{"@type":"PostalAddress","addressLocality":"Mumbai","addressRegion":"MH","addressCountry":"IN"},
+    "telephone":"+91-0000000000",
+    "url":"https://yourusername.github.io/nagarseva/#service/sample",
+    "priceRange":"₹₹",
+    "openingHours":"Mo-Su 09:00-18:00"
+  }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 sticky-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#home" class="flex items-center gap-2">
+          <img alt="NagarSeva logo" class="w-8 h-8" src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230ea5e9'/><path d='M12 44h40v8H12zM16 12h8v24h-8zM40 12h8v24h-8zM28 20h8v16h-8z' fill='white'/></svg>">
+          <span class="font-bold text-white text-lg">NagarSeva</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-slate-100">
+          <a href="#home" class="hover:text-cyan-400" data-nav>Home</a>
+          <a href="#services" class="hover:text-cyan-400" data-nav>Services</a>
+          <a href="#add-listing" class="hover:text-cyan-400" data-nav>Add Listing</a>
+          <a href="#about" class="hover:text-cyan-400" data-nav>About</a>
+          <a href="#contact" class="hover:text-cyan-400" data-nav>Contact</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <select id="lang" class="text-sm rounded-md bg-white/90 px-2 py-1">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="bn">বাংলা</option>
+          </select>
+          <a href="#services" class="hidden sm:inline-flex bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium px-3 py-1.5 rounded-md" data-i18n="cta_find_services">Find services</a>
+          <button class="md:hidden text-white" id="menuBtn" aria-label="Menu">☰</button>
+        </div>
+      </div>
+      <nav id="mobileNav" class="md:hidden hidden pb-3">
+        <div class="flex flex-col gap-2 text-slate-100">
+          <a href="#home" class="hover:text-cyan-400" data-nav>Home</a>
+          <a href="#services" class="hover:text-cyan-400" data-nav>Services</a>
+          <a href="#add-listing" class="hover:text-cyan-400" data-nav>Add Listing</a>
+          <a href="#about" class="hover:text-cyan-400" data-nav>About</a>
+          <a href="#contact" class="hover:text-cyan-400" data-nav>Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Home -->
+    <section id="home" class="space-y-10">
+      <!-- Hero -->
+      <div class="rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 text-white p-8 md:p-12 relative overflow-hidden">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n="hero_title">Find trusted local services near you</h1>
+            <p class="text-slate-200 mb-6" data-i18n="hero_sub">Plumbers, electricians, tutors, painters, and more — compare ratings, prices, and hours.</p>
+            <div class="flex gap-2">
+              <a href="#services" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-md font-semibold" data-i18n="hero_cta_primary">Browse services</a>
+              <a href="#add-listing" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-md" data-i18n="hero_cta_secondary">Add your business</a>
+            </div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <form id="searchForm" class="space-y-3">
+              <div class="relative">
+                <input id="searchInput" type="search" class="w-full rounded-md px-4 py-3 text-slate-900" placeholder="Search: plumber, tutor…" aria-label="Search services" />
+                <button class="absolute right-1 top-1.5 bg-cyan-500 text-white rounded-md px-3 py-1.5" type="submit" data-i18n="search_btn">Search</button>
+              </div>
+              <p class="text-sm text-slate-200" data-i18n="search_hint">Powered by instant on-page search.</p>
+            </form>
+          </div>
+        </div>
+        <div class="absolute -right-12 -bottom-12 opacity-20 pointer-events-none">
+          <svg width="300" height="300"><circle cx="150" cy="150" r="120" fill="#0891b2"/></svg>
+        </div>
+      </div>
+
+      <!-- Popular categories -->
+      <div>
+        <h2 class="text-xl font-bold mb-3" data-i18n="popular_categories">Popular categories</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="categoryGrid">
+          <!-- dynamically filled -->
+        </div>
+      </div>
+
+      <!-- Map block -->
+      <div>
+        <h2 class="text-xl font-bold mb-3" data-i18n="nearby_map">Explore nearby services</h2>
+        <div id="homeMap" class="h-72 w-full rounded-xl overflow-hidden border border-slate-200"></div>
+        <p class="text-sm text-slate-500 mt-2">Map: © OpenStreetMap contributors</p>
+      </div>
+
+      <!-- Featured services -->
+      <div>
+        <h2 class="text-xl font-bold mb-3" data-i18n="featured_services">Featured services</h2>
+        <div id="featuredList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- cards -->
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div>
+        <h2 class="text-xl font-bold mb-3" data-i18n="faq_title">Frequently asked questions</h2>
+        <div id="faqList" class="divide-y rounded-xl border bg-white">
+          <!-- FAQs -->
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="rounded-2xl bg-white p-6 border">
+        <h3 class="text-lg font-semibold mb-2" data-i18n="newsletter_title">Get tips and local deals</h3>
+        <form id="newsletterForm" class="flex flex-col sm:flex-row gap-2">
+          <input type="email" required class="flex-1 rounded-md border px-3 py-2" placeholder="you@example.com" aria-label="Email" />
+          <button class="bg-slate-900 text-white px-4 py-2 rounded-md" type="submit" data-i18n="newsletter_subscribe">Subscribe</button>
+        </form>
+        <p id="newsletterMsg" class="text-sm text-green-600 mt-2 hidden"></p>
+      </div>
+    </section>
+
+    <hr class="my-10">
+
+    <!-- Services listing -->
+    <section id="services" class="space-y-6">
+      <h2 class="text-2xl font-bold" data-i18n="services_title">Services</h2>
+
+      <!-- Filters -->
+      <div class="grid md:grid-cols-6 gap-3 bg-white p-4 rounded-xl border">
+        <select id="filterCategory" class="rounded-md border px-2 py-2">
+          <option value="" data-i18n="any_category">Any category</option>
+        </select>
+        <select id="filterCity" class="rounded-md border px-2 py-2">
+          <option value="" data-i18n="any_city">Any city</option>
+        </select>
+        <select id="filterPrice" class="rounded-md border px-2 py-2">
+          <option value="" data-i18n="any_price">Any price</option>
+          <option value="1">₹</option>
+          <option value="2">₹₹</option>
+          <option value="3">₹₹₹</option>
+        </select>
+        <select id="filterRating" class="rounded-md border px-2 py-2">
+          <option value="" data-i18n="any_rating">Any rating</option>
+          <option value="4">4.0+</option>
+          <option value="3">3.0+</option>
+        </select>
+        <label class="flex items-center gap-2">
+          <input id="filterOpen" type="checkbox" class="w-4 h-4">
+          <span data-i18n="open_now">Open now</span>
+        </label>
+        <button id="resetFilters" class="border px-3 py-2 rounded-md" data-i18n="reset_filters">Reset</button>
+      </div>
+
+      <!-- Results + pagination -->
+      <div id="resultsCount" class="text-sm text-slate-600"></div>
+      <div id="servicesList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div class="flex items-center justify-center gap-2">
+        <button id="prevPage" class="px-3 py-1.5 rounded-md border">‹</button>
+        <span id="pageInfo" class="text-sm"></span>
+        <button id="nextPage" class="px-3 py-1.5 rounded-md border">›</button>
+      </div>
+    </section>
+
+    <hr class="my-10">
+
+    <!-- Service detail -->
+    <section id="service-detail" class="space-y-6 hidden">
+      <a href="#services" class="text-cyan-700 hover:underline text-sm">← Back to services</a>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-3 space-y-4">
+          <h2 id="detailName" class="text-2xl font-bold"></h2>
+          <div class="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+            <span id="detailCategory"></span>
+            <span>•</span>
+            <span id="detailRating"></span>
+            <span>•</span>
+            <span id="detailPrice"></span>
+          </div>
+          <div id="detailImages" class="grid grid-cols-3 gap-2"></div>
+          <p id="detailDesc" class="text-slate-700"></p>
+          <div class="flex gap-2">
+            <a id="ctaCall" class="bg-cyan-600 text-white px-3 py-2 rounded-md" target="_blank" rel="noopener">Call now</a>
+            <a id="ctaWhatsApp" class="bg-green-600 text-white px-3 py-2 rounded-md" target="_blank" rel="noopener">WhatsApp</a>
+            <a id="ctaEmail" class="bg-slate-900 text-white px-3 py-2 rounded-md" target="_blank" rel="noopener">Email</a>
+            <a id="ctaDirections" class="border px-3 py-2 rounded-md" target="_blank" rel="noopener">Get directions</a>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">Reviews</h3>
+            <div id="reviewsList" class="space-y-3"></div>
+          </div>
+        </div>
+        <div class="md:col-span-2 space-y-4">
+          <div id="detailMap" class="h-64 rounded-xl overflow-hidden border"></div>
+          <div class="bg-white rounded-xl border p-4 text-sm">
+            <p><strong>Address:</strong> <span id="detailAddress"></span></p>
+            <p><strong>Hours:</strong> <span id="detailHours"></span></p>
+            <p><strong>Contact:</strong> <span id="detailContact"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="my-10">
+
+    <!-- Add Listing -->
+    <section id="add-listing" class="space-y-6">
+      <h2 class="text-2xl font-bold" data-i18n="add_title">Add your listing</h2>
+      <form id="addForm" class="bg-white rounded-xl border p-6 grid md:grid-cols-2 gap-4" action="https://formspree.io/f/yourFormId" method="POST">
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizName" data-i18n="field_name">Business name</label>
+          <input id="bizName" name="name" required class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizCategory" data-i18n="field_category">Category</label>
+          <select id="bizCategory" name="category" required class="w-full rounded-md border px-3 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizPhone" data-i18n="field_phone">Phone</label>
+          <input id="bizPhone" name="phone" required pattern="^[0-9+\-\s()]{7,}$" class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizEmail">Email</label>
+          <input id="bizEmail" type="email" name="email" class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1" for="bizAddress" data-i18n="field_address">Address</label>
+          <input id="bizAddress" name="address" required class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizCity" data-i18n="field_city">City</label>
+          <input id="bizCity" name="city" required class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizHours" data-i18n="field_hours">Hours (e.g., Mo-Su 09:00-18:00)</label>
+          <input id="bizHours" name="hours" required class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bizPrice" data-i18n="field_price">Price Level</label>
+          <select id="bizPrice" name="price" class="w-full rounded-md border px-3 py-2">
+            <option value="1">₹</option>
+            <option value="2">₹₹</option>
+            <option value="3">₹₹₹</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1" for="bizDesc" data-i18n="field_desc">Description</label>
+          <textarea id="bizDesc" name="description" rows="4" required class="w-full rounded-md border px-3 py-2"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1" for="bizImages" data-i18n="field_images">Images (URLs, comma-separated)</label>
+          <input id="bizImages" name="images" class="w-full rounded-md border px-3 py-2" />
+        </div>
+        <div class="md:col-span-2 flex items-center gap-2">
+          <input id="consent" type="checkbox" required class="w-4 h-4" />
+          <label for="consent" class="text-sm" data-i18n="field_consent">I confirm the information is accurate and agree to the terms.</label>
+        </div>
+        <div class="md:col-span-2 flex gap-3">
+          <button class="bg-cyan-600 text-white px-4 py-2 rounded-md" type="submit" data-i18n="submit_listing">Submit</button>
+          <p id="addFormMsg" class="text-sm"></p>
+        </div>
+      </form>
+      <p class="text-xs text-slate-500" data-i18n="add_note">For production use, connect to Formspree/Netlify with your form endpoint.</p>
+    </section>
+
+    <hr class="my-10">
+
+    <!-- About -->
+    <section id="about" class="space-y-4">
+      <h2 class="text-2xl font-bold" data-i18n="about_title">About NagarSeva</h2>
+      <p data-i18n="about_body">NagarSeva is an AI-powered local service finder designed to connect people with trusted providers quickly. We focus on transparency, verified reviews, and a simple, multilingual experience.</p>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="space-y-4 mt-10">
+      <h2 class="text-2xl font-bold" data-i18n="contact_title">Contact</h2>
+      <div class="bg-white rounded-xl border p-6">
+        <p class="mb-2"><strong>Email:</strong> hello@nagarseva.example</p>
+        <p class="mb-4"><strong>Address:</strong> Mumbai, Maharashtra, India</p>
+        <form id="contactForm" class="grid md:grid-cols-2 gap-4">
+          <input name="name" required class="rounded-md border px-3 py-2" placeholder="Your name" />
+          <input name="email" type="email" required class="rounded-md border px-3 py-2" placeholder="you@example.com" />
+          <textarea name="message" required rows="4" class="md:col-span-2 rounded-md border px-3 py-2" placeholder="How can we help?"></textarea>
+          <button class="bg-slate-900 text-white px-4 py-2 rounded-md md:col-span-2" type="submit" data-i18n="contact_send">Send</button>
+          <p id="contactMsg" class="text-sm md:col-span-2 hidden text-green-700">Thanks! We’ll get back soon.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Legal pages (disclaimer/privacy/terms shown inline) -->
+    <section id="legal" class="space-y-6 mt-10">
+      <h2 class="text-2xl font-bold">Legal</h2>
+      <details class="bg-white rounded-xl border p-4">
+        <summary class="font-semibold cursor-pointer">Disclaimer</summary>
+        <p class="mt-2 text-sm text-slate-700">Information is provided as-is. Verify provider details independently. We are not liable for any losses.</p>
+      </details>
+      <details class="bg
